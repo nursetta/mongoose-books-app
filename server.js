@@ -22,13 +22,30 @@ app.use(express.static('public'));
 // body parser config to accept our datatypes
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// add a character to a book
+app.post('/api/books/:book_id/characters', function (req, res) {
+  // Get book id from url params (`req.params`)
+  var bookId = req.params.book_id;
+  db.Book.findById(bookId)
+    .populate('author')
+    .exec(function(err, foundBook) {
+      if (err) { return console.log(err);
+      }
+      foundBook.characters.push(req.body);
+
+      // handle errors
+      // push req.body into characters array
+
+      // save the book with the new character
+      // send the entire book back
+      foundBook.save();
+      res.json(foundBook);
+    });
+});
 
 ////////////////////
 //  ROUTES
 ///////////////////
-
-
-
 
 // define a root route: localhost:3000/
 app.get('/', function (req, res) {
